@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A private digital birthday letter and keepsake page.">
+  <meta name="color-scheme" content="light">
+  <title>Happy Birthday! ✨</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%82%3C/text%3E%3C/svg%3E">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #fdf1f2;
+      --card: #fff6f7;
+      --card-active: #ffeced;
+      --border: #f3d6dc;
+      --ink: #3a2c33;
+      --ink-soft: #5c4650;
+      --muted: #9c8890;
+      --label: #d99bb0;
+      --accent: #b06a8f;
+      --seal: #c94a4a;
+      --seal-dark: #a63333;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--paper);
+      background-image: radial-gradient(circle at 15% 10%, #fbe1e6 0%, transparent 45%),
+                         radial-gradient(circle at 85% 20%, #ecdcf5 0%, transparent 50%),
+                         radial-gradient(circle at 50% 90%, #f7e3ec 0%, transparent 55%);
+      background-attachment: fixed;
+    }
+    #envelopeOverlay {
+      background-image: radial-gradient(circle at 15% 10%, #fbe1e6 0%, transparent 45%),
+                         radial-gradient(circle at 85% 20%, #ecdcf5 0%, transparent 50%),
+                         radial-gradient(circle at 50% 90%, #f7e3ec 0%, transparent 55%);
+      background-color: var(--paper);
+    }
+    .font-serif-display { font-family: 'Playfair Display', serif; }
+    .font-handwritten { font-family: 'Caveat', cursive; }
+
+    /* Lightweight grain overlay for a soft vintage paper feel */
+    .grain {
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--paper); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    /* Music Vinyl Animation */
+    .vinyl-spin { animation: spin 4s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* 3D Card Flip CSS */
+    .perspective-1000 { perspective: 1000px; }
+    .preserve-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+    .is-flipped { transform: rotateY(180deg); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-[#2c2a29] relative antialiased overflow-x-hidden selection:bg-[#f9dde4]">
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Audio Element (Add your actual song file name here) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="your-song.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Envelope / Wax Seal Welcome Overlay -->
+  <div id="envelopeOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-[var(--paper)] transition-all duration-700 ease-in-out">
+    <div class="max-w-sm w-full mx-4 text-center">
+      <div class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-8 shadow-[0_20px_50px_rgba(163,137,112,0.15)] relative overflow-hidden">
+        <div class="absolute -top-12 -left-12 w-24 h-24 bg-[#fbe4ea] rounded-full opacity-60" aria-hidden="true"></div>
+        <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-[#f3e0f0] rounded-full opacity-60" aria-hidden="true"></div>
+
+        <!-- REPLACED BASE64 WITH A DIRECT FILE REFERENCE FOR THE GIF -->
+        <img id="catImg" src="your-animated-cat.gif" alt="Cute Cat" class="w-24 h-24 object-contain mx-auto mb-2 relative z-10 drop-shadow-[0_8px_16px_rgba(176,106,143,0.25)]">
+
+        <button id="openSealBtn" type="button" class="relative z-10 mx-auto my-6 block group focus:outline-none">
+          <span class="w-20 h-20 bg-gradient-to-br from-[var(--seal)] to-[var(--seal-dark)] rounded-full flex items-center justify-center shadow-[0_10px_25px_rgba(166,51,51,0.4)] transition-transform duration-300 group-hover:scale-110 group-active:scale-95 relative mx-auto">
+            <span class="text-white text-2xl font-serif-display font-light" aria-hidden="true">♥</span>
+            <span class="absolute inset-0 rounded-full border-2 border-white/20 scale-90" aria-hidden="true"></span>
+          </span>
+          <span class="block mt-4 text-xs tracking-[0.2em] text-[var(--label)] uppercase font-medium group-hover:text-[#7a5d6c] transition-colors">Tap seal to open</span>
+        </button>
+
+        <p class="font-serif-display italic text-lg text-[#7a5d6c]">A private digital letter waiting for you...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main id="mainContent" class="opacity-0 translate-y-4 transition-all duration-1000 ease-out max-w-xl mx-auto px-4 pt-12 pb-24">
+
+    <header class="text-center mb-12">
+      <span class="text-[10px] uppercase tracking-[0.3em] font-semibold text-[var(--label)] block mb-2">Chapter 01 · Celebration</span>
+      <h1 class="font-serif-display text-4xl sm:text-5xl tracking-tight text-[#3a2c33]">
+        Happy Birthday, <span class="italic text-[var(--accent)]" id="namePlaceholder">Someone Special</span> ✨
+      </h1>
+    </header>
+
+    <!-- Music Card -->
+    <section class="bg-[var(--card)] border border-[var(--border)] rounded-[2rem] p-6 shadow-sm mb-10" aria-label="Music dedication">
+      <div class="flex items-center gap-4">
+        <div class="w-20 h-20 bg-[var(--border)] rounded-xl flex-shrink-0 relative overflow-hidden flex items-center justify-center shadow-inner">
+          <div id="vinyl" class="w-12 h-12 rounded-full border-[4px] border-[#3a2c33] bg-[#2c2a29] flex items-center justify-center">
+            <div class="w-4 h-4 bg-[var(--accent)] rounded-full flex items-center justify-center">
+                <div class="w-1.5 h-1.5 bg-[var(--card)] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs uppercase tracking-wider font-semibold text-[var(--label)] mb-0.5">Now Playing</p>
+          <h3 class="font-serif-display text-lg text-[#2c2a29] truncate font-medium">Your Favorite Melody</h3>
+          <p class="text-xs text-[var(--muted)] truncate italic">Tap the heart to pause/play</p>
+        </div>
+        <button id="loveBtn" type="button" aria-pressed="true" aria-label="Play/Pause" class="text-[var(--seal)] transition-colors p-2 text-2xl focus:outline-none hover:scale-110">
+          ♥
+        </button>
+      </div>
+    </section>
+
+    <!-- Polaroid Gallery -->
+    <section class="mb-14" aria-label="Photo memories">
+      <span class="text-[10px] uppercase tracking-[0.3em] font-semibold text-[var(--label)] block mb-4 text-center">Collected Memories</span>
+
+      <div class="space-y-8">
+        <figure class="bg-white border border-[#f3dde3] p-4 pb-8 shadow-[0_10px_30px_rgba(0,0,0,0.03)] rounded-sm rotate-[-1.5deg] hover:rotate-0 transition-transform duration-500 max-w-[90%] mx-auto">
+          <div class="aspect-square w-full bg-[#fbeef1] rounded-sm relative overflow-hidden mb-4 flex items-center justify-center text-center text-sm text-[var(--muted)] italic p-6">
+            [ Add an aesthetic photo or warm Polaroid shot here ]
+          </div>
+          <figcaption class="font-handwritten text-2xl text-center text-[var(--ink-soft)]">That golden sunset afternoon 🌾</figcaption>
+        </figure>
+
+        <figure class="bg-white border border-[#f3dde3] p-4 pb-8 shadow-[0_10px_30px_rgba(0,0,0,0.03)] rounded-sm rotate-[2deg] hover:rotate-0 transition-transform duration-500 max-w-[90%] mx-auto">
+          <div class="aspect-square w-full bg-[#f3e9f2] rounded-sm relative overflow-hidden mb-4 flex items-center justify-center text-center text-sm text-[var(--muted)] italic p-6">
+            [ Add a bright retro grainy mirror selfie or laughing candid ]
+          </div>
+          <figcaption class="font-handwritten text-2xl text-center text-[var(--ink-soft)]">Moments captured in absolute chaos ☕</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Birthday Wishes (Flipping Cards) -->
+    <section class="mb-14" aria-label="Pick a wish">
+      <span class="text-[10px] uppercase tracking-[0.3em] font-semibold text-[var(--label)] block mb-2 text-center">Three Wishes</span>
+      <h2 class="font-serif-display text-2xl text-center text-[#3a2c33] mb-1">a tiny bouquet of birthday wishes</h2>
+      <p class="text-xs text-[var(--muted)] text-center mb-6 italic">pick each flower — there's a little wish inside ♡</p>
+
+      <div class="grid grid-cols-3 gap-3" id="flowerGrid">
+        
+        <!-- Card 1 -->
+        <div class="flower-card perspective-1000 w-full h-64 mx-auto cursor-pointer" data-wish="0">
+          <div class="flower-card-inner w-full h-full transition-transform duration-700 preserve-3d relative">
+            <!-- Front of Card -->
+            <div class="absolute inset-0 backface-hidden bg-[var(--card)] border border-[var(--border)] rounded-2xl flex flex-col items-center justify-center gap-3 shadow-sm hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(217,155,176,0.25)] transition-all">
+              <span class="text-4xl" aria-hidden="true">🌸</span>
+              <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--label)] font-semibold">Pick me</span>
+            </div>
+            <!-- Back of Card (The Message) -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 flex flex-col items-center text-center shadow-md justify-center">
+              <span class="text-[9px] uppercase tracking-widest text-[var(--ink-soft)] font-semibold mb-3">✿ The way you<br>laugh ✿</span>
+              <p class="font-handwritten text-[1.1rem] text-[var(--ink-soft)] leading-tight">your laugh is one of those sounds that just makes a room feel warmer. wishing you a year full of the kind of moments that bring it out again and again.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="flower-card perspective-1000 w-full h-64 mx-auto cursor-pointer" data-wish="1">
+          <div class="flower-card-inner w-full h-full transition-transform duration-700 preserve-3d relative">
+            <div class="absolute inset-0 backface-hidden bg-[var(--card)] border border-[var(--border)] rounded-2xl flex flex-col items-center justify-center gap-3 shadow-sm hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(217,155,176,0.25)] transition-all">
+              <span class="text-4xl" aria-hidden="true">🌺</span>
+              <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--label)] font-semibold">Pick me</span>
+            </div>
+            <div class="absolute inset-0 backface-hidden rotate-y-180 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 flex flex-col items-center text-center shadow-md justify-center">
+              <span class="text-[9px] uppercase tracking-widest text-[var(--ink-soft)] font-semibold mb-3">✿ The way you<br>show up ✿</span>
+              <p class="font-handwritten text-[1.1rem] text-[var(--ink-soft)] leading-tight">you remember the small things — the worry from a Tuesday, the random text on a hard day. it always feels like being seen, not just heard.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="flower-card perspective-1000 w-full h-64 mx-auto cursor-pointer" data-wish="2">
+          <div class="flower-card-inner w-full h-full transition-transform duration-700 preserve-3d relative">
+            <div class="absolute inset-0 backface-hidden bg-[var(--card)] border border-[var(--border)] rounded-2xl flex flex-col items-center justify-center gap-3 shadow-sm hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(217,155,176,0.25)] transition-all">
+              <span class="text-4xl" aria-hidden="true">🪻</span>
+              <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--label)] font-semibold">Pick me</span>
+            </div>
+            <div class="absolute inset-0 backface-hidden rotate-y-180 bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 flex flex-col items-center text-center shadow-md justify-center">
+              <span class="text-[9px] uppercase tracking-widest text-[var(--ink-soft)] font-semibold mb-3">✿ Your gentle<br>heart ✿</span>
+              <p class="font-handwritten text-[1.1rem] text-[var(--ink-soft)] leading-tight">you have this rare way of making everyone around you feel safe. wishing you the exact same softness and care back this year.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="mt-16 text-center text-[11px] uppercase tracking-widest text-[var(--label)]">
+      Made with care · 2026 Digital Gift
+    </footer>
+
+  </main>
+
+  <!-- Letter Page View (Initially Hidden) -->
+  <main id="letterPage" class="hidden opacity-0 transition-opacity duration-700 max-w-2xl mx-auto px-4 pt-12 pb-24 min-h-screen">
+    <button id="backBtn" type="button" class="mb-8 inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-[var(--muted)] hover:text-[#3a2c33] transition-colors focus:outline-none">
+      ← Back
+    </button>
+
+    <section id="letterSection" class="bg-[#fdf3f5] border border-[#f2dde2] rounded-[2.5rem] p-8 sm:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.02)] relative" aria-label="Letter">
+      <div class="absolute top-0 bottom-0 left-8 w-[1px] bg-[#f0b8c6]/50 hidden sm:block" aria-hidden="true"></div>
+
+      <div class="relative z-10">
+        <span class="text-[10px] uppercase tracking-[0.3em] font-semibold text-[var(--label)] block mb-6">A Letter to You</span>
+
+        <div class="font-handwritten text-2xl text-[var(--ink-soft)] space-y-6 leading-relaxed">
+          <p>Dearest,</p>
+          <p>Happy Birthday! On this beautiful milestone day, I wanted to step away from ordinary flat cards or casual one-line wishes to bring you a tiny, dedicated space built entirely around your favorite memories.</p>
+          <p>Watching you navigate life with your persistent dedication and boundless spirit is an absolute privilege. I hope this coming year grants you complete peace, clear paths forward, and endless candid moments worth pinning.</p>
+          <p>Thank you for being exactly who you are — an incredible person making every space around you brighter. Enjoy your day to the absolute fullest!</p>
+          <p class="pt-4">With love &amp; care,</p>
+          <p class="font-bold text-3xl text-[var(--accent)]">— Yours Truly</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Final Popup Overlay (Triggers after all 3 cards are flipped) -->
+  <div id="wishCardOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#3a2c33]/40 backdrop-blur-sm px-6" role="dialog" aria-modal="true" aria-labelledby="wishCardHeading">
+    <div class="relative bg-white rounded-[2rem] p-8 max-w-sm w-full text-center shadow-[0_25px_60px_rgba(58,44,51,0.25)]">
+      <span class="absolute -top-3 -left-4 text-2xl opacity-70" aria-hidden="true">🌸</span>
+      <span class="absolute -top-2 -right-3 text-xl opacity-70" aria-hidden="true">🌺</span>
+      <span class="absolute -bottom-3 -right-4 text-2xl opacity-70" aria-hidden="true">🪻</span>
+
+      <div class="w-16 h-16 rounded-full overflow-hidden mx-auto mb-4 border-4 border-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] ring-2 ring-[var(--label)]">
+        <img id="catImgOverlay" src="your-animated-cat.gif" alt="Cat Avatar" class="w-full h-full object-cover">
+      </div>
+
+      <h3 id="wishCardHeading" class="font-serif-display text-2xl text-[#3a2c33] mb-3">happy birthday <span aria-hidden="true">♡</span></h3>
+      <p id="wishOverlayText" class="text-sm text-[var(--ink-soft)] mb-6 leading-relaxed">
+        thank you for being you — for the patience, the late-night talks, the silly inside jokes. i hope today feels as gentle and special as you've always made my days feel.
+      </p>
+
+      <button id="readLetterBtn" type="button" class="inline-flex items-center gap-2 bg-gradient-to-br from-[#ebaec0] to-[var(--label)] text-white text-xs uppercase tracking-[0.15em] font-semibold px-6 py-3.5 rounded-full shadow-[0_8px_20px_rgba(217,155,176,0.4)] hover:scale-105 transition-transform focus:outline-none">
+        Read my letter <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ---- Personalization ----
+      var RECIPIENT_NAME = 'Someone Special';
+      document.getElementById('namePlaceholder').textContent = RECIPIENT_NAME;
+
+      // ---- Envelope open & Audio Start ----
+      var overlay = document.getElementById('envelopeOverlay');
+      var mainContent = document.getElementById('mainContent');
+      var letterPage = document.getElementById('letterPage');
+      var audio = document.getElementById('bgMusic');
+      var vinyl = document.getElementById('vinyl');
+      var loveBtn = document.getElementById('loveBtn');
+
+      function openEnvelope() {
+        overlay.classList.add('opacity-0', 'pointer-events-none', '-translate-y-12');
+        overlay.setAttribute('aria-hidden', 'true');
+        
+        // Start playing the song when user interacts (unblocks browser autoplay policy)
+        audio.play().catch(function(error) {
+            console.log("Audio play prevented by browser:", error);
+        });
+        vinyl.classList.add('vinyl-spin'); // start record spinning
+
+        setTimeout(function () {
+          mainContent.classList.remove('opacity-0', 'translate-y-4');
+        }, 300);
+        document.getElementById('openSealBtn').removeEventListener('click', openEnvelope);
+      }
+      document.getElementById('openSealBtn').addEventListener('click', openEnvelope);
+
+      // ---- Music Player Toggle ----
+      loveBtn.addEventListener('click', function () {
+        if (audio.paused) {
+            audio.play();
+            loveBtn.classList.add('text-[var(--seal)]');
+            loveBtn.classList.remove('text-[var(--muted)]');
+            vinyl.classList.add('vinyl-spin');
+            loveBtn.setAttribute('aria-pressed', 'true');
+        } else {
+            audio.pause();
+            loveBtn.classList.remove('text-[var(--seal)]');
+            loveBtn.classList.add('text-[var(--muted)]');
+            vinyl.classList.remove('vinyl-spin');
+            loveBtn.setAttribute('aria-pressed', 'false');
+        }
+      });
+
+      // ---- Card Flipping Logic ----
+      var wishOverlay = document.getElementById('wishCardOverlay');
+      var pickedWishes = new Set();
+
+      document.getElementById('flowerGrid').addEventListener('click', function (e) {
+        var card = e.target.closest('.flower-card');
+        if (!card) return;
+
+        var wishIndex = card.getAttribute('data-wish');
+        var innerCard = card.querySelector('.flower-card-inner');
+        
+        // Add flipped class to rotate the card via CSS
+        if (!innerCard.classList.contains('is-flipped')) {
+            innerCard.classList.add('is-flipped');
+            pickedWishes.add(wishIndex);
+
+            // Check if all 3 are picked to trigger final popup
+            if (pickedWishes.size === 3) {
+              setTimeout(function() {
+                wishOverlay.classList.remove('hidden');
+                wishOverlay.classList.add('flex');
+              }, 1200); // 1.2 second delay after the last flip finishes so they can read it!
+            }
+        }
+      });
+
+      // ---- "New Page" Letter Logic ----
+      document.getElementById('readLetterBtn').addEventListener('click', function () {
+        // Hide Popup
+        wishOverlay.classList.add('hidden');
+        wishOverlay.classList.remove('flex');
+        
+        // Hide Main View, Show Letter View
+        mainContent.classList.add('hidden');
+        letterPage.classList.remove('hidden');
+        
+        // Trigger opacity transition
+        setTimeout(function() {
+          letterPage.classList.remove('opacity-0');
+        }, 50);
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // ---- Return to the main page ----
+      document.getElementById('backBtn').addEventListener('click', function() {
+        letterPage.classList.add('opacity-0');
+        
+        setTimeout(function() {
+          letterPage.classList.add('hidden');
+          mainContent.classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 700); 
+      });
+
+    })();
+  </script>
+</body>
+</html>
